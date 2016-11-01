@@ -1,4 +1,3 @@
-
 package calculator;
 
 import java.awt.Color;
@@ -22,77 +21,77 @@ import javax.swing.UIManager;
  *
  * @author MAHADI HASAN NAHID
  */
-public class Calculator {
-
-    private JFrame mainFrame;
-    //=========Display Field==========//
-    private JTextField displayField1;
-    private JTextField displayField2;
-    //=========Buttons===============//
-    private JButton backSpaceButton;
-    private JButton clearButton;
-    private JButton clearAllButton;
+public abstract class Calculator {
+    
     //==========Numbers=============//
-    private JButton one;
-    private JButton two;
-    private JButton three;
-    private JButton four;
-    private JButton five;
-    private JButton six;
-    private JButton seven;
-    private JButton eight;
-    private JButton nine;
-    private JButton zero;
-    //===========Opertators===========//
-    private JButton plusButton;
-    private JButton minusButton;
-    private JButton multiplyButton;
-    private JButton divisionButton;
-    private JButton sqrtButton;
-    private JButton inversButton;
-    private JButton plusMinusButton;
-    private JButton MemoryPlusButton;
-    private JButton dotButton;
-    private JButton percentButton;
-    private JButton equalButton;
-    //===============Panels===========//
-    private JPanel panel1;
-    private JPanel panel2;
-    private JPanel panel3;
-    private JPanel panel4;
-    private JPanel panel5;
-    private JPanel panel6;
-    private JPanel panel7;
-    //==============Menu===============//
-    private JMenuBar menuBar;
-    private JMenu veiwMenu;
-    private JMenu editMenu;
-    private JMenu helpMenu;
-    
-    private JMenuItem help;
-    private JMenuItem about;
-    private JMenuItem version;
-    
-    private JMenuItem veiw4;
-    private JMenuItem veiw5;
-    private JMenuItem veiw6;
-    
-    private JMenuItem[] veiws;
-    //=============Look And Feel===============//
-    private UIManager.LookAndFeelInfo[] looks;
-    private String[] lookNames;
-    //===============//
-    private String displayValue = "";
-    private double value1;
-    private double value2;
-    private char operator;
-    private double answer;
+     JButton one;
+     JButton two;
+     JButton three;
+     JButton four;
+     JButton five;
+     JButton six;
+     JButton seven;
+     JButton eight;
+     JButton nine;
+     JButton zero;
+     
+          JFrame mainFrame;
+    //=========Display Field==========//
+     JTextField displayField1;
+     JTextField displayField2;
+    //=========Buttons===============//
+     JButton backSpaceButton;
+     JButton clearButton;
+     JButton clearAllButton;
 
-    //==============Calculator Constructor============//
-    public Calculator() {
+    //===========Opertators===========//
+     JButton plusButton;
+     JButton minusButton;
+     JButton multiplyButton;
+     JButton divisionButton;
+     JButton sqrtButton;
+     JButton inversButton;
+     JButton plusMinusButton;
+     JButton MemoryPlusButton;
+     JButton dotButton;
+     JButton percentButton;
+     JButton equalButton;
+    //===============Panels===========//
+     JPanel panel1;
+     JPanel panel2;
+     JPanel panel3;
+     JPanel panel4;
+     JPanel panel5;
+     JPanel panel6;
+     JPanel panel7;
+    //==============Menu===============//
+     JMenuBar menuBar;
+     JMenu viewMenu;
+     JMenu editMenu;
+     JMenu helpMenu;
+    
+     JMenuItem help;
+     JMenuItem about;
+     JMenuItem version;
+    
+     JMenuItem OrdinaryMode;
+     JMenuItem SciMode;
+     JMenuItem view2;
+    
+     JMenuItem[] views;
+    //=============Look And Feel===============//
+     UIManager.LookAndFeelInfo[] looks;
+     String[] lookNames;
+    //===============//
+     String displayValue = "";
+     double value1;
+     double value2;
+     char operator;
+     double answer;
+
+ public Calculator() {
 
         mainFrame = new JFrame("Calculator");
-
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Dimension screanSize = toolkit.getScreenSize();
 
@@ -226,27 +225,37 @@ public class Calculator {
         //================Menu================//
 
         menuBar = new JMenuBar();
-        veiwMenu = new JMenu("veiw");
+        viewMenu = new JMenu("View");
 
-        // veiw1 = new JMenuItem("Nimbuzz");
-        // veiw2 = new JMenuItem("Windows");
+        // view1 = new JMenuItem("Nimbuzz");
+        // view2 = new JMenuItem("Windows");
 
         //=================================//
 
-        ActionsHandler handler = new ActionsHandler();
+        Calculator.ActionsHandler handler = new Calculator.ActionsHandler();
         //=============================//
 
-        veiwMenu.addActionListener(handler);
+        viewMenu.addActionListener(handler);
         
-        veiws = new JMenuItem[looks.length];
-
-        for (int i = 0; i < looks.length; i++) {
-            veiws[i] = new JMenuItem(lookNames[i]);
-            veiws[i].addActionListener(handler);
-            veiwMenu.add(veiws[i]);
-            veiwMenu.addSeparator();
+        views = new JMenuItem[looks.length];
+        int i;
+        for (i = 0; i < looks.length; i++) {
+            views[i] = new JMenuItem(lookNames[i]);
+            views[i].addActionListener(handler);
+            viewMenu.add(views[i]);
+            viewMenu.addSeparator();
         }
+        OrdinaryMode = new JMenuItem(Type.ORDINARY.toString());
 
+        OrdinaryMode.addActionListener(handler);
+        viewMenu.add(OrdinaryMode) ;
+        viewMenu.addSeparator();
+
+        SciMode = new JMenuItem(Type.SCIENTIFIC.toString());
+        SciMode.addActionListener(handler);           
+        viewMenu.add(SciMode) ;
+        viewMenu.addSeparator();        
+     
 
         editMenu = new JMenu("Edit");
         //------------------------
@@ -274,18 +283,13 @@ public class Calculator {
 
 
 
-        menuBar.add(veiwMenu);
+        menuBar.add(viewMenu);
         menuBar.add(editMenu);
         menuBar.add(helpMenu);
 
         mainFrame.setJMenuBar(menuBar);
 
         //============Look And Feel=============//
-
-
-
-
-
 
 
         one.addActionListener(handler);
@@ -320,8 +324,7 @@ public class Calculator {
 
 
     }
-
-    public void changeLookAndFeel(int value) {
+     public void changeLookAndFeel(int value) {
         try {
             UIManager.setLookAndFeel(looks[value].getClassName());
             SwingUtilities.updateComponentTreeUI(mainFrame);
@@ -385,7 +388,7 @@ public class Calculator {
                     displayField1.setText(displayValue);
                 }
 
-                //=======Opertators================//
+                //=======Operators================//
 
                 if (event.getSource() == plusButton) {
                     value1 = Double.parseDouble(displayField1.getText());
@@ -514,9 +517,15 @@ public class Calculator {
                 }
                 //==============Menu=============//
                 for (int i = 0; i < looks.length; i++) {
-                    if (event.getSource() == veiws[i]) {
+                    if (event.getSource() == views[i]) {
                         changeLookAndFeel(i);
                     }
+                }
+                if(event.getSource() == OrdinaryMode) {                    
+                    CalculatorFactory.getCalculator(Type.ORDINARY.toString());
+                }
+                if(event.getSource() == SciMode) {                    
+                    CalculatorFactory.getCalculator(Type.SCIENTIFIC.toString());
                 }
                 
                 if(event.getSource() == help) {}
@@ -543,8 +552,5 @@ public class Calculator {
 
         }
     }
-
-    public static void main(String[] args) {
-        Calculator calculator = new Calculator();
-    }
+    
 }
